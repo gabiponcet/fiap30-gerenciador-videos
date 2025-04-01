@@ -1,7 +1,8 @@
 package com.fiap.tech.challenge.domain.video;
 
-import com.course.admin.catalogo.domain.ValueObject;
-import com.course.admin.catalogo.domain.utils.IDUtils;
+
+import com.fiap.tech.challenge.domain.ValueObject;
+import com.fiap.tech.challenge.domain.utils.IDUtils;
 
 import java.util.Objects;
 
