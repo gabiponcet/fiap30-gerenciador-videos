@@ -35,7 +35,8 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle
+          restore-keys: |
+            ${{ runner.os }}-gradle
 
       - name: Build with Gradle
         run: ./gradlew build --no-daemon
@@ -83,7 +84,7 @@ jobs:
         run: ./gradlew test jacocoTestReport
 
       - name: Upload JaCoCo Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
           path: build/reports/jacoco/test/
@@ -91,12 +92,6 @@ jobs:
       - name: Check Quality Gate
         run: ./gradlew check
         continue-on-error: true
-
-    #  - name: Run SonarQube Analysis
-     #   run: ./gradlew sonar -Dsonar.projectKey=fiap-g30_production -Dsonar.organization=fiap-g30 -Dsonar.token=${{ secrets.SONAR_TOKEN }} -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-      #  env:
-       #   SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        #  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Send Discord Notification - Test Success
         if: success()
@@ -129,13 +124,13 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Pull Docker image
-        run: docker pull gabiponcet/gerenciador-videos:latest
+        run: docker pull ${{ secrets.DOCKER_USERNAME }}/gerenciador-videos:latest
 
       - name: Scan Docker image for vulnerabilities
-        run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --severity HIGH,CRITICAL gabiponcet/gerenciador-videos:latest
+        run: docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/gerenciador-videos:latest
 
       - name: Push Docker image
-        run: docker push gabiponcet/gerenciador-videos:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/gerenciador-videos:latest
 
       - name: Send Discord Success Notification - Deploy
         if: success()
