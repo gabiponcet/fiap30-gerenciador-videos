@@ -12,6 +12,7 @@ group = 'com.fiap.tech.challenge.infrastructure'
 dependencies {
     implementation project(':domain')
     implementation project(':application')
+    implementation 'software.amazon.awssdk:s3'
     implementation'org.springdoc:springdoc-openapi-webmvc-core:1.6.14'
     implementation'org.springdoc:springdoc-openapi-ui:1.6.14'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
@@ -45,7 +46,7 @@ testCodeCoverageReport {
 }
 
 flyway {
-    url = System.getenv('FLYWAY_DB') ?: 'jdbc:postgresql://localhost:5432/producao'
+    url = System.getenv('FLYWAY_DB') ?: 'jdbc:postgresql://localhost:5432/videos'
     user = System.getenv('FLYWAY_USER') ?: 'postgres'
     password = System.getenv('FLYWAY_PASS') ?: 'postgres'
 }

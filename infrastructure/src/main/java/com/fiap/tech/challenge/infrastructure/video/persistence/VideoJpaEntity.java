@@ -6,6 +6,8 @@ import com.fiap.tech.challenge.domain.video.VideoID;
 import javax.persistence.*;
 import java.util.Optional;
 
+@Table(name = "videos")
+@Entity(name = "Video")
 public class VideoJpaEntity {
 
     @Id
