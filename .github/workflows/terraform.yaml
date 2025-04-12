@@ -54,6 +54,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-terraform-
 
+      - name: Cleanup old cache
+        run: |
+         rm -rf ~/.terraform.d
+         rm -rf ~/.terraform
+
       - name: Terraform Init
         run: terraform init
         working-directory: ./terraform
