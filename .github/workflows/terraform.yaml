@@ -2,7 +2,7 @@ name: Provision Infrastructure
 
 on:
   workflow_run:
-    workflows: ["CI/CD Pipeline - Gerenciador de Vídeos"]
+    workflows: ["CI/CD Pipeline - Gerenciador de Vídeos Application"]
     types:
       - completed
 
