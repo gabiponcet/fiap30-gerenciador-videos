@@ -13,6 +13,7 @@ public class Video extends AggregateRoot<VideoID> {
     private String title;
     private String description;
     private double duration;
+    private ClientID clientId;
     private AudioVideoMedia video;
 
     protected Video(
@@ -20,6 +21,7 @@ public class Video extends AggregateRoot<VideoID> {
             final String aTitle,
             final String aDescription,
             final double aDuration,
+            final ClientID aClientId,
             final AudioVideoMedia aVideo,
 
             final List<DomainEvent> domainEvents
@@ -28,6 +30,7 @@ public class Video extends AggregateRoot<VideoID> {
         this.title = aTitle;
         this.description = aDescription;
         this.duration = aDuration;
+        this.clientId = aClientId;
         this.video = aVideo;
     }
 
@@ -39,7 +42,8 @@ public class Video extends AggregateRoot<VideoID> {
     public static Video newVideo(
             final String aTitle,
             final String aDescription,
-            final double aDuration
+            final double aDuration,
+            final ClientID clientId
     ) {
         final var anId = VideoID.unique();
         return new Video(
@@ -47,6 +51,7 @@ public class Video extends AggregateRoot<VideoID> {
                 aTitle,
                 aDescription,
                 aDuration,
+                clientId,
                 null,
                 null
         );
@@ -68,6 +73,7 @@ public class Video extends AggregateRoot<VideoID> {
             final String aTitle,
             final String aDescription,
             final double aDuration,
+            final ClientID aClientId,
             final AudioVideoMedia aVideo
     ) {
         return new Video(
@@ -75,6 +81,7 @@ public class Video extends AggregateRoot<VideoID> {
                 aTitle,
                 aDescription,
                 aDuration,
+                aClientId,
                 aVideo,
                 null
         );
@@ -88,9 +95,14 @@ public class Video extends AggregateRoot<VideoID> {
                 aVideo.getTitle(),
                 aVideo.getDescription(),
                 aVideo.getDuration(),
+                aVideo.getClientId(),
                 aVideo.getVideo().orElse(null),
                 aVideo.getDomainEvents()
         );
+    }
+
+    public ClientID getClientId() {
+        return clientId;
     }
 
     public String getTitle() {

@@ -1,0 +1,16 @@
+{
+  "realm": "video-api",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "video-service",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "my-video-client-secret",
+      "redirectUris": ["http://localhost:8080/*"],
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "clientAuthenticatorType": "client-secret"
+    }
+  ]
+}

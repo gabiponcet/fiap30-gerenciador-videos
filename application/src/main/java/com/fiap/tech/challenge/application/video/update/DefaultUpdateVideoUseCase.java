@@ -13,13 +13,16 @@ public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
     private final VideoGateway videoGateway;
     private final MediaResourceGateway mediaResourceGateway;
+    private final AuthenticatedUser authenticatedUser;
 
     public DefaultUpdateVideoUseCase(
             final VideoGateway videoGateway,
-            final MediaResourceGateway mediaResourceGateway
+            final MediaResourceGateway mediaResourceGateway,
+            final AuthenticatedUser authenticatedUser
     ) {
         this.videoGateway = Objects.requireNonNull(videoGateway);
         this.mediaResourceGateway = Objects.requireNonNull(mediaResourceGateway);
+        this.authenticatedUser = Objects.requireNonNull(authenticatedUser);
     }
 
     @Override
@@ -52,10 +55,10 @@ public class DefaultUpdateVideoUseCase extends UpdateVideoUseCase {
 
     private Video update(final UpdateVideoCommand aCommand, final Video aVideo) {
         final var anId = aVideo.getId();
-
+        final var clientID = authenticatedUser.getClientId();
         try {
             final var aVideoMedia = aCommand.getVideo()
-                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, VideoResource.with(it, VideoMediaType.VIDEO)))
+                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, VideoResource.with(it, VideoMediaType.VIDEO), clientID))
                     .orElse(null);
 
             return videoGateway.update(

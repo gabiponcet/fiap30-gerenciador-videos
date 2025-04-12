@@ -12,13 +12,16 @@ public class DefaultCreateVideoUseCase
 
     private final VideoGateway videoGateway;
     private final MediaResourceGateway mediaResourceGateway;
+    private final AuthenticatedUser authenticatedUser;
 
     public DefaultCreateVideoUseCase(
             final VideoGateway videoGateway,
-            final MediaResourceGateway mediaResourceGateway
+            final MediaResourceGateway mediaResourceGateway,
+            final AuthenticatedUser authenticatedUser
     ) {
         this.videoGateway = Objects.requireNonNull(videoGateway);
         this.mediaResourceGateway = Objects.requireNonNull(mediaResourceGateway);
+        this.authenticatedUser = Objects.requireNonNull(authenticatedUser);
     }
 
 
@@ -27,10 +30,10 @@ public class DefaultCreateVideoUseCase
         final var aTitle = aCommand.title();
         final var aDescription = aCommand.description();
         final var aDuration = aCommand.duration();
-
+        final var clientId = authenticatedUser.getClientId();
         final var notification = Notification.create();
 
-        final var aVideo = Video.newVideo(aTitle, aDescription, aDuration);
+        final var aVideo = Video.newVideo(aTitle, aDescription, aDuration, clientId);
 
         aVideo.validate(notification);
 
@@ -43,10 +46,10 @@ public class DefaultCreateVideoUseCase
 
     private Video create(final CreateVideoCommand aCommand, final Video aVideo) {
         final var anId = aVideo.getId();
-
+        final var clientID = authenticatedUser.getClientId();
         try {
             final var aVideoMedia = aCommand.getVideo()
-                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, VideoResource.with(it, VideoMediaType.VIDEO)))
+                    .map(it -> mediaResourceGateway.storeAudioVideo(anId, VideoResource.with(it, VideoMediaType.VIDEO), clientID))
                     .orElse(null);
 
             return videoGateway.create(
@@ -54,7 +57,7 @@ public class DefaultCreateVideoUseCase
                             .updateVideoMedia(aVideoMedia)
             );
         } catch (Throwable t) {
-            mediaResourceGateway.clearResources(anId);
+            mediaResourceGateway.clearResources(anId, clientID);
             throw InternalErrorException.with("An error on create video was observed [videoId:%s]".formatted(anId.getValue()), t);
         }
     }

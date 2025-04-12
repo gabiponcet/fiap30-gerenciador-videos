@@ -17,6 +17,7 @@ import com.fiap.tech.challenge.application.video.retrieve.list.DefaultListVideoU
 import com.fiap.tech.challenge.application.video.retrieve.list.ListVideoUseCase;
 import com.fiap.tech.challenge.application.video.update.DefaultUpdateVideoUseCase;
 import com.fiap.tech.challenge.application.video.update.UpdateVideoUseCase;
+import com.fiap.tech.challenge.domain.video.AuthenticatedUser;
 import com.fiap.tech.challenge.domain.video.MediaResourceGateway;
 import com.fiap.tech.challenge.domain.video.VideoGateway;
 import org.springframework.context.annotation.Bean;
@@ -31,19 +32,24 @@ public class VideoUseCaseConfig {
 
     private final MediaResourceGateway mediaResourceGateway;
 
+    private final AuthenticatedUser authenticatedUser;
+
     public VideoUseCaseConfig(
             final VideoGateway videoGateway,
-            final MediaResourceGateway mediaResourceGateway
+            final MediaResourceGateway mediaResourceGateway,
+            final AuthenticatedUser authenticatedUser
     ) {
         this.videoGateway = Objects.requireNonNull(videoGateway);
         this.mediaResourceGateway = Objects.requireNonNull(mediaResourceGateway);
+        this.authenticatedUser = authenticatedUser;
     }
 
     @Bean
     public CreateVideoUseCase createVideoUseCase() {
         return new DefaultCreateVideoUseCase(
                 videoGateway,
-                mediaResourceGateway
+                mediaResourceGateway,
+                authenticatedUser
         );
     }
 
@@ -51,13 +57,14 @@ public class VideoUseCaseConfig {
     public UpdateVideoUseCase updateVideoUseCase() {
         return new DefaultUpdateVideoUseCase(
                 videoGateway,
-                mediaResourceGateway
+                mediaResourceGateway,
+                authenticatedUser
         );
     }
 
     @Bean
     public DeleteVideoUseCase deleteVideoUseCase() {
-        return new DefaultDeleteVideoUseCase(videoGateway, mediaResourceGateway);
+        return new DefaultDeleteVideoUseCase(videoGateway, mediaResourceGateway, authenticatedUser);
     }
 
     @Bean
@@ -72,12 +79,12 @@ public class VideoUseCaseConfig {
 
     @Bean
     public GetMediaUseCase getMediaUseCase() {
-        return new DefaultGetMediaUseCase(mediaResourceGateway);
+        return new DefaultGetMediaUseCase(mediaResourceGateway, authenticatedUser);
     }
 
     @Bean
     public UploadMediaUseCase uploadMediaUseCase() {
-        return new DefaultUploadMediaUseCase(videoGateway, mediaResourceGateway);
+        return new DefaultUploadMediaUseCase(videoGateway, mediaResourceGateway, authenticatedUser);
     }
 
     @Bean

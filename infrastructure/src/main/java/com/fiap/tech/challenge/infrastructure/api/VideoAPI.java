@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +19,7 @@ import java.util.Set;
 @Tag(name = "Video")
 public interface VideoAPI {
 
-
+    @PreAuthorize("#id == authentication.principal.subject")
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -36,6 +37,7 @@ public interface VideoAPI {
             @RequestParam(name = "video_file", required = false) MultipartFile videoFile
     );
 
+    @PreAuthorize("#id == authentication.principal.subject")
     @GetMapping(
             value = "{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -48,6 +50,7 @@ public interface VideoAPI {
     })
     VideoResponse getById(@PathVariable(name = "id") String id);
 
+    @PreAuthorize("#id == authentication.principal.subject")
     @PutMapping(
             value = "{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -74,7 +77,7 @@ public interface VideoAPI {
     })
     void deleteById(@PathVariable(name = "id") String id);
 
-
+    @PreAuthorize("#id == authentication.principal.subject")
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -92,6 +95,7 @@ public interface VideoAPI {
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir
     );
 
+    @PreAuthorize("#id == authentication.principal.subject")
     @GetMapping(
             value = "{id}/medias/{type}"
     )
@@ -103,6 +107,7 @@ public interface VideoAPI {
     })
     ResponseEntity<byte[]> getMediaByType(@PathVariable(name = "id") String id, @PathVariable(name = "type") String type);
 
+    @PreAuthorize("#id == authentication.principal.subject")
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,

@@ -1,5 +1,6 @@
 package com.fiap.tech.challenge.infrastructure.video.persistence;
 
+import com.fiap.tech.challenge.domain.video.ClientID;
 import com.fiap.tech.challenge.domain.video.Video;
 import com.fiap.tech.challenge.domain.video.VideoID;
 
@@ -22,6 +23,9 @@ public class VideoJpaEntity {
     @Column(name = "duration", precision = 2)
     private double duration;
 
+    @Column(name = "client_id", nullable = false)
+    private String clientId;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "video_id")
     private AudioVideoMediaJpaEntity video;
@@ -34,6 +38,7 @@ public class VideoJpaEntity {
             final String title,
             final String description,
             final double duration,
+            final String clientId,
             final AudioVideoMediaJpaEntity video
     ) {
         this.id = id;
@@ -51,6 +56,7 @@ public class VideoJpaEntity {
                 aVideo.getTitle(),
                 aVideo.getDescription(),
                 aVideo.getDuration(),
+                aVideo.getClientId().getValue(),
                 aVideo.getVideo()
                         .map(AudioVideoMediaJpaEntity::from)
                         .orElse(null)
@@ -65,6 +71,7 @@ public class VideoJpaEntity {
                 getTitle(),
                 getDescription(),
                 getDuration(),
+                ClientID.from(getClientId()),
                 Optional.ofNullable(getVideo())
                         .map(AudioVideoMediaJpaEntity::toDomain)
                         .orElse(null)
@@ -115,4 +122,9 @@ public class VideoJpaEntity {
         this.video = video;
         return this;
     }
+
+    public String getClientId() {
+        return clientId;
+    }
+
 }
