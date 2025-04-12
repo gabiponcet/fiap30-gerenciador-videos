@@ -1,6 +1,11 @@
-# Ignore Gradle project-specific cache directory
+# Ignorar arquivos executáveis grandes do Terraform
+terraform/.terraform/providers/registry.terraform.io/hashicorp/*/*/terraform-provider-*.exe
+
+# Gradle cache directory
 .gradle
 
-# Ignore Gradle build output directory
+# Gradle build output directory
 build
+
+# IntelliJ IDEA
 /.idea/
