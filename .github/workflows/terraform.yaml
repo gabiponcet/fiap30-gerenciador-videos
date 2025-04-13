@@ -44,20 +44,15 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Cache Terraform
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.terraform.d
-            ~/.terraform
-          key: ${{ runner.os }}-terraform-${{ hashFiles('**/lockfile') }}
-          restore-keys: |
-            ${{ runner.os }}-terraform-
-
-      - name: Cleanup old cache
-        run: |
-         rm -rf ~/.terraform.d
-         rm -rf ~/.terraform
+      # - name: Cache Terraform
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       ~/.terraform.d
+      #       ~/.terraform
+      #     key: ${{ runner.os }}-terraform-${{ hashFiles('**/lockfile') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-terraform-
 
       - name: Terraform Init
         run: terraform init
