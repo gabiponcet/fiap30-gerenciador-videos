@@ -1,15 +1,10 @@
 name: Provision Infrastructure
 
-#on:
-  #workflow_run:
-   # workflows: ["CI/CD Pipeline - Gerenciador de Vídeos Application"]
-    #types:
-     # - completed
 on:
-   push:
-     branches:
-       - master
-       - Terraform
+  workflow_run:
+    workflows: ["CI/CD Pipeline - Gerenciador de Vídeos Application"]
+    types:
+      - completed
 
 jobs:
   terraform:
