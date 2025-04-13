@@ -9,7 +9,7 @@ on:
    push:
      branches:
        - master
-       - gerenciador-pipeline
+       - Terraform
 
 jobs:
   terraform:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Install LocalStack CLI
         run: pip install localstack
@@ -45,14 +45,14 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Cache Terraform
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         with:
           path: |
             ~/.terraform.d
             ~/.terraform
-           key: ${{ runner.os }}-terraform-${{ hashFiles('**/lockfile') }}
-           restore-keys: |
-             ${{ runner.os }}-terraform-
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/lockfile') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
 
       - name: Terraform Init
         run: terraform init
