@@ -38,9 +38,6 @@ jobs:
             sleep 10
           done
 
-      - name: Check Terraform Version
-        run: terraform version
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
 
