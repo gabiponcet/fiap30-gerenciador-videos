@@ -33,10 +33,11 @@ public class StorageConfig {
         return new AwsS3Properties();
     }
 
-//    @Bean
-//    public StorageService localStorageAPI() {
-//        return new InMemoryStorageService();
-//    }
+    @Bean
+    @Profile({"development", "test-integration", "test-e2e"})
+    public StorageService localStorageAPI() {
+        return new InMemoryStorageService();
+    }
 
     @Bean
     public S3Client s3Client(AwsS3Properties props) {
@@ -52,7 +53,7 @@ public class StorageConfig {
     }
 
     @Bean
-//    @Profile({"development", "test-integration", "test-e2e"})
+    @ConditionalOnMissingBean
     public StorageService s3StorageAPI(
             final AwsS3Properties props
     ) {
