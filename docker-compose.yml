@@ -47,5 +47,5 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB: dev-file
-    volumes:
-      - ./realm-config:/opt/keycloak/data/import
+#    volumes:
+#      - ./realm-config:/opt/keycloak/data/import

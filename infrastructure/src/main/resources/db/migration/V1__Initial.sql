@@ -12,6 +12,8 @@ CREATE TABLE videos (
                         id CHAR(32) NOT NULL PRIMARY KEY,
                         title VARCHAR(255) NOT NULL,
                         description VARCHAR(1000) NOT NULL,
+                        duration DECIMAL(5, 2) NOT NULL,
+                        client_id CHAR(32) NOT NULL,
                         video_id CHAR(32) NULL,
                         CONSTRAINT fk_v_videos_id FOREIGN KEY (video_id) REFERENCES videos_video_media(id) ON DELETE CASCADE
-);8
+);

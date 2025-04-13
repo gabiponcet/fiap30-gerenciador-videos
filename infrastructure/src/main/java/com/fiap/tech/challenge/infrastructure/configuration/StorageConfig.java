@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 
@@ -32,25 +33,26 @@ public class StorageConfig {
         return new AwsS3Properties();
     }
 
-    @Bean
-    @Profile({"development", "test-integration", "test-e2e"})
-    public StorageService localStorageAPI() {
-        return new InMemoryStorageService();
-    }
+//    @Bean
+//    public StorageService localStorageAPI() {
+//        return new InMemoryStorageService();
+//    }
 
     @Bean
     public S3Client s3Client(AwsS3Properties props) {
         var credentials = AwsBasicCredentials.create(props.getAccessKey(), props.getSecretKey());
 
         return S3Client.builder()
+                .overrideConfiguration(ClientOverrideConfiguration.builder().build())
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .endpointOverride(URI.create(props.getEndpoint()))
                 .region(Region.of(props.getRegion()))
+                .forcePathStyle(true)
                 .build();
     }
 
     @Bean
-    @ConditionalOnMissingBean
+//    @Profile({"development", "test-integration", "test-e2e"})
     public StorageService s3StorageAPI(
             final AwsS3Properties props
     ) {

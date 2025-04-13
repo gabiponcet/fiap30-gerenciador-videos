@@ -45,7 +45,7 @@ public class VideoJpaEntity {
         this.title = title;
         this.description = description;
         this.duration = duration;
-
+        this.clientId = clientId;
         this.video = video;
 
     }

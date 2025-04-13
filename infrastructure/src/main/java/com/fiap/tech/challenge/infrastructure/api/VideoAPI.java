@@ -19,7 +19,7 @@ import java.util.Set;
 @Tag(name = "Video")
 public interface VideoAPI {
 
-    @PreAuthorize("#id == authentication.principal.subject")
+//    @PreAuthorize("#id == authentication.principal.subject")
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -37,7 +37,7 @@ public interface VideoAPI {
             @RequestParam(name = "video_file", required = false) MultipartFile videoFile
     );
 
-    @PreAuthorize("#id == authentication.principal.subject")
+//    @PreAuthorize("#id == authentication.principal.subject")
     @GetMapping(
             value = "{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -95,7 +95,6 @@ public interface VideoAPI {
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String dir
     );
 
-    @PreAuthorize("#id == authentication.principal.subject")
     @GetMapping(
             value = "{id}/medias/{type}"
     )
@@ -107,7 +106,7 @@ public interface VideoAPI {
     })
     ResponseEntity<byte[]> getMediaByType(@PathVariable(name = "id") String id, @PathVariable(name = "type") String type);
 
-    @PreAuthorize("#id == authentication.principal.subject")
+//    @PreAuthorize("#id == authentication.principal.subject")
     @PostMapping(
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE,

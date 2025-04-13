@@ -62,6 +62,17 @@ public class AwsS3Properties implements InitializingBean {
     }
 
     @Override
+    public String toString() {
+        return "AwsS3Properties{" +
+                "bucket='" + bucket + '\'' +
+                ", region='" + region + '\'' +
+                ", endpoint='" + endpoint + '\'' +
+                ", accessKey='" + accessKey + '\'' +
+                ", secretKey='" + secretKey + '\'' +
+                '}';
+    }
+
+    @Override
     public void afterPropertiesSet() {
         log.debug(toString());
     }

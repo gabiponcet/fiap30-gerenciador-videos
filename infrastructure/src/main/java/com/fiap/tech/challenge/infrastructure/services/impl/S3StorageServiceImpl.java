@@ -3,15 +3,11 @@ package com.fiap.tech.challenge.infrastructure.services.impl;
 import com.fiap.tech.challenge.domain.resource.Resource;
 import com.fiap.tech.challenge.infrastructure.services.StorageService;
 import com.fiap.tech.challenge.infrastructure.utils.HashingUtils;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
