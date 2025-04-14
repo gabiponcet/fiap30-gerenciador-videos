@@ -50,23 +50,6 @@ public interface VideoAPI {
     })
     VideoResponse getById(@PathVariable(name = "id") String id);
 
-    @PreAuthorize("#id == authentication.principal.subject")
-    @PutMapping(
-            value = "{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @Operation(summary = "Update a video by it's identifier")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Video updated successfully"),
-            @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
-            @ApiResponse(responseCode = "404", description = "Video was not found"),
-            @ApiResponse(responseCode = "500", description = "An internal error was thrown"),
-    })
-    ResponseEntity<?> updateVideo(
-            @PathVariable(name = "id") String id,
-            @RequestBody UpdateVideoRequest aRequest);
-
     @DeleteMapping(value = "{id}")
     @Operation(summary = "Delete a Video by it's identifier")
     @ResponseStatus(HttpStatus.NO_CONTENT)

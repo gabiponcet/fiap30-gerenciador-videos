@@ -3,7 +3,6 @@ package com.fiap.tech.challenge.infrastructure.video.presenters;
 import com.fiap.tech.challenge.application.video.media.upload.UploadMediaOutput;
 import com.fiap.tech.challenge.application.video.retrieve.get.VideoOutput;
 import com.fiap.tech.challenge.application.video.retrieve.list.VideoListOutput;
-import com.fiap.tech.challenge.application.video.update.UpdateVideoOutput;
 import com.fiap.tech.challenge.domain.video.AudioVideoMedia;
 import com.fiap.tech.challenge.infrastructure.video.models.*;
 
@@ -13,13 +12,6 @@ public interface VideoApiPresenter {
         return new UploadMediaResponse(
                 output.videoId(),
                 output.mediaType().name()
-        );
-    }
-
-
-    static UpdateVideoResponse present(final UpdateVideoOutput output) {
-        return new UpdateVideoResponse(
-                output.id()
         );
     }
 

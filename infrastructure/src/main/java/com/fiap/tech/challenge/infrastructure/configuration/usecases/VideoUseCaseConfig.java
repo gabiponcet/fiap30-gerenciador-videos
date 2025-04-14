@@ -15,8 +15,6 @@ import com.fiap.tech.challenge.application.video.retrieve.get.DefaultGetVideoByI
 import com.fiap.tech.challenge.application.video.retrieve.get.GetVideoByIdUseCase;
 import com.fiap.tech.challenge.application.video.retrieve.list.DefaultListVideoUseCase;
 import com.fiap.tech.challenge.application.video.retrieve.list.ListVideoUseCase;
-import com.fiap.tech.challenge.application.video.update.DefaultUpdateVideoUseCase;
-import com.fiap.tech.challenge.application.video.update.UpdateVideoUseCase;
 import com.fiap.tech.challenge.domain.video.AuthenticatedUser;
 import com.fiap.tech.challenge.domain.video.MediaResourceGateway;
 import com.fiap.tech.challenge.domain.video.VideoGateway;
@@ -47,15 +45,6 @@ public class VideoUseCaseConfig {
     @Bean
     public CreateVideoUseCase createVideoUseCase() {
         return new DefaultCreateVideoUseCase(
-                videoGateway,
-                mediaResourceGateway,
-                authenticatedUser
-        );
-    }
-
-    @Bean
-    public UpdateVideoUseCase updateVideoUseCase() {
-        return new DefaultUpdateVideoUseCase(
                 videoGateway,
                 mediaResourceGateway,
                 authenticatedUser
