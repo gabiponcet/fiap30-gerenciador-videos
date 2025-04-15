@@ -53,7 +53,7 @@ public class VideoTest extends com.fiap.tech.challenge.domain.UnitTest {
                 """;
         final var expectedDuration = 120.0;
         final var expectedClientId = ClientID.unique();
-        final var expectedEvent = new VideoMediaCreated("ID", "file");
+        final var expectedEvent = new VideoMediaCreated("ID", "clientId", "resourceId", "file");
         final var expectedEventCount = 1;
 
         final var aVideo = Video.newVideo(
@@ -108,7 +108,7 @@ public class VideoTest extends com.fiap.tech.challenge.domain.UnitTest {
                 AudioVideoMedia.with("abc", "Video.mp4", "/123/videos", "", MediaStatus.PENDING);
 
         final var expectedDomainEventsSize = 1;
-        final var expectedDomainEvents = new VideoMediaCreated(aVideoMedia.id(), aVideoMedia.rawLocation());
+        final var expectedDomainEvents = new VideoMediaCreated(aVideo.getId().getValue(), expectedClientId.getValue(), aVideoMedia.id(), aVideoMedia.rawLocation());
 
         final var actualVideo = aVideo.with(aVideo).updateVideoMedia(aVideoMedia);
 
@@ -122,7 +122,9 @@ public class VideoTest extends com.fiap.tech.challenge.domain.UnitTest {
         assertEquals(aVideoMedia, actualVideo.getVideo().get());
         assertEquals(expectedDomainEventsSize, actualVideo.getDomainEvents().size());
         final var actualEvent = (VideoMediaCreated) actualVideo.getDomainEvents().get(0);
-        assertEquals(aVideo.getId().getValue(), actualEvent.resourceId());
+        assertEquals(aVideo.getId().getValue(), actualEvent.id());
+        assertEquals(aVideo.getClientId().getValue(), actualEvent.clientId());
+        assertEquals(aVideoMedia.id(), actualEvent.resourceId());
         assertEquals(aVideoMedia.rawLocation(), actualEvent.filePath());
 
         assertDoesNotThrow(() -> actualVideo.validate(new ThrowsValidationHandler()));

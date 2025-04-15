@@ -1,0 +1,18 @@
+
+@startuml ComponentUploadService
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container(uploadService, "Video Upload Service", "Spring Boot", "Recebe vídeos e publica eventos")
+
+Component(controller, "UploadController", "REST Controller", "Expõe endpoint para upload")
+Component(appService, "UploadVideoUseCase", "Application Service", "Contém lógica de upload e publicação de eventos")
+Component(domain, "Video (Aggregate)", "Domain Model", "Representa o vídeo e seu estado")
+Component(gateway, "MediaResourceGateway", "Interface", "Interface para armazenar o vídeo")
+Component(rabbit, "EventPublisher", "Infra", "Publica evento no RabbitMQ")
+
+Rel(controller, appService, "Chama")
+Rel(appService, domain, "Cria/Atualiza")
+Rel(appService, gateway, "Armazena vídeo")
+Rel(appService, rabbit, "Publica evento")
+
+@enduml

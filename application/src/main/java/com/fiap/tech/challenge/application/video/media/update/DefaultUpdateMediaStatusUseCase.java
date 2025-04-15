@@ -44,6 +44,7 @@ public class DefaultUpdateMediaStatusUseCase extends UpdateMediaStatusUseCase {
             }
             case PROCESSING -> aVideo.processing(aType);
             case COMPLETED -> aVideo.completed(aType, encodedPath);
+            case ERROR -> aVideo.error(aType);
         }
         this.videoGateway.update(aVideo);
     }
