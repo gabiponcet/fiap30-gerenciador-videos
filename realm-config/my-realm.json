@@ -1,0 +1,38 @@
+{
+  "realm": "video-app",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "video-service",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "my-video-client-secret",
+      "redirectUris": ["http://localhost:8080/*"],
+      "serviceAccountsEnabled": true,
+      "standardFlowEnabled": false,
+      "clientAuthenticatorType": "client-secret"
+    }
+  ],
+  "users": [
+    {
+      "username": "user1",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456"
+        }
+      ]
+    },
+    {
+      "username": "user2",
+      "enabled": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456"
+        }
+      ]
+    }
+  ]
+}

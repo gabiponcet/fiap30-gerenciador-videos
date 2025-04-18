@@ -6,6 +6,7 @@ import com.fiap.tech.challenge.domain.video.MediaStatus;
 import com.fiap.tech.challenge.infrastructure.configuration.Json;
 import com.fiap.tech.challenge.infrastructure.video.models.VideoEncoderCompleted;
 import com.fiap.tech.challenge.infrastructure.video.models.VideoEncoderError;
+import com.fiap.tech.challenge.infrastructure.video.models.VideoEncoderProcessing;
 import com.fiap.tech.challenge.infrastructure.video.models.VideoEncoderResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +46,29 @@ public class VideoEncoderListener {
 
             this.updateMediaStatusUseCase.execute(aCmd);
 
-        } else if (aResult instanceof VideoEncoderError) {
+        } else if (aResult instanceof VideoEncoderProcessing dto) {
+            log.error("[message:video.listener.income] [status:processing] [payload:{}]", message);
+            final var aCmd = UpdateMediaStatusCommand.with(
+                    MediaStatus.PROCESSING,
+                    dto.id(),
+                    dto.video().resourceId(),
+                    dto.video().encodedVideoFolder(),
+                    dto.video().filePath()
+            );
+            this.updateMediaStatusUseCase.execute(aCmd);
+        }
+
+        else if (aResult instanceof VideoEncoderError dto) {
             log.error("[message:video.listener.income] [status:error] [payload:{}]", message);
+            final var aCmd = UpdateMediaStatusCommand.with(
+                    MediaStatus.ERROR,
+                    dto.id(),
+                    dto.video().resourceId(),
+                    dto.video().encodedVideoFolder(),
+                    dto.video().filePath()
+            );
+
+            this.updateMediaStatusUseCase.execute(aCmd);
         } else {
             log.error("[message:video.listener.income] [status:unknown] [payload:{}]", message);
         }

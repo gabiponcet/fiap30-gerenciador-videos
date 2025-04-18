@@ -1,0 +1,27 @@
+
+@startuml ContainerDiagram
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(client, "Cliente")
+
+System_Boundary(videoSystem, "Video Management System") {
+  Container(uploadService, "Video Upload Service", "Spring Boot", "Recebe vídeos, autentica, armazena e publica evento")
+  Container(processingService, "Video Processing Service", "Spring Boot", "Extrai imagens dos vídeos e armazena")
+  ContainerDb(rabbitmq, "RabbitMQ", "Message Broker", "Gerencia eventos assíncronos entre serviços")
+  ContainerDb(s3, "S3", "Storage", "Armazena os vídeos e imagens")
+}
+
+System_Ext(keycloak, "Keycloak", "Identity Provider")
+
+Rel(client, uploadService, "Faz upload de vídeo", "HTTPS + OAuth2")
+Rel(uploadService, keycloak, "Valida token de acesso")
+Rel(uploadService, s3, "Salva vídeo")
+Rel(uploadService, rabbitmq, "Publica evento VideoUploaded")
+
+Rel(processingService, rabbitmq, "Escuta evento VideoUploaded")
+Rel(processingService, s3, "Extrai imagens e salva no bucket")
+Rel(processingService, rabbitmq, "Publica evento VideoProcessingFailed (compensação)", "em caso de falha")
+
+Rel(uploadService, rabbitmq, "Escuta VideoProcessingFailed e executa ação compensatória", "Rollback: deleta vídeo")
+
+@enduml
