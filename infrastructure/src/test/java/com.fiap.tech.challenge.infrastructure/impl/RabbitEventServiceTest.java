@@ -21,6 +21,7 @@ import static org.wildfly.common.Assert.assertNotNull;
 public class RabbitEventServiceTest {
 
     private static final String LISTENER = "video.created";
+
     @Autowired
     @VideoCreatedQueue
     private EventService publisher;

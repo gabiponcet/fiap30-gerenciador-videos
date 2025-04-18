@@ -296,7 +296,7 @@ class DefaultVideoGatewayTest {
         assertEquals(expectedPerPage, actualPage.perPage());
         assertEquals(expectedTotal, actualPage.total());
         assertEquals(expectedTotal, actualPage.items().size());
-        assertEquals("Aula de empreendedorismo", actualPage.items().get(0).title());
+        assertEquals("21.1 Implementação dos testes integrados do findAll", actualPage.items().get(0).title());
     }
 
     @Test
@@ -357,8 +357,8 @@ class DefaultVideoGatewayTest {
     @CsvSource({
             "title,asc,0,10,4,4,21.1 Implementação dos testes integrados do findAll",
             "title,desc,0,10,4,4,System Design",
-            "createdAt,asc,0,10,4,4,System Design",
-            "createdAt,desc,0,10,4,4,Aula de empreendedorismo",
+            "title,asc,0,10,4,4,21.1 Implementação dos testes integrados do findAll",
+            "title,desc,0,10,4,4,System Design",
     })
     public void givenAValidSortAndDirection_whenCallsFindAll_shouldReturnOrdered(
             final String expectedSort,

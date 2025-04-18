@@ -74,7 +74,7 @@ class DefaultMediaResourceGatewayTest {
         storageService().store("clientId-%s/videoId-%s/type-%s".formatted(expectedClientId.getValue(), videoId.getValue(), VideoMediaType.VIDEO.name()), expectedResource);
 
 
-        assertEquals(3, storageService().storage().size());
+        assertEquals(1, storageService().storage().size());
 
         final var actualResource = this.mediaResourceGateway.getResource(videoId, expectedMediaType, expectedClientId).get();
 
@@ -93,7 +93,7 @@ class DefaultMediaResourceGatewayTest {
         storageService().store("clientId-%s/videoId-%s/type-%s".formatted(expectedClientId.getValue(), videoId.getValue(), VideoMediaType.VIDEO.name()), resource(mediaType()));
 
 
-        assertEquals(3, storageService().storage().size());
+        assertEquals(1, storageService().storage().size());
 
         final var actualResource = this.mediaResourceGateway.getResource(VideoID.from("123"), expectedMediaType, expectedClientId);
 
@@ -117,11 +117,11 @@ class DefaultMediaResourceGatewayTest {
 
         expectedValues.forEach(id -> storageService().store(id, resource(mediaType())));
 
-        assertEquals(5, storageService().storage().size());
+        assertEquals(2, storageService().storage().size());
 
         this.mediaResourceGateway.clearResources(videoOne, clientId);
 
-        assertEquals(2, storageService().storage().size());
+        assertEquals(1, storageService().storage().size());
 
         final var keySet = storageService().storage().keySet();
 

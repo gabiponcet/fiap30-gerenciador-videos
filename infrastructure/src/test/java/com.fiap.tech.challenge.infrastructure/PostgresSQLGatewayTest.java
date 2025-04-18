@@ -17,7 +17,7 @@ import java.lang.annotation.*;
         basePackages = "com.fiap.tech.challenge",
         useDefaultFilters = false,
         includeFilters = {
-            @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*PostgresSQLGateway")
+            @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*Gateway")
         }
 )
 @ExtendWith(PostgresSQLCleanUpExtension.class)

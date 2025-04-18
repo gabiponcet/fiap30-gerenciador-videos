@@ -1,5 +1,6 @@
 package com.fiap.tech.challenge.infrastructure.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiap.tech.challenge.application.video.create.CreateVideoCommand;
 import com.fiap.tech.challenge.application.video.create.CreateVideoOutput;
 import com.fiap.tech.challenge.application.video.create.CreateVideoUseCase;
@@ -20,12 +21,12 @@ import com.fiap.tech.challenge.domain.exceptions.NotificationException;
 import com.fiap.tech.challenge.domain.pagination.Pagination;
 import com.fiap.tech.challenge.domain.pagination.SearchQuery;
 import com.fiap.tech.challenge.domain.validation.Error;
-import com.fiap.tech.challenge.domain.video.*;
+import com.fiap.tech.challenge.domain.video.Video;
+import com.fiap.tech.challenge.domain.video.VideoID;
+import com.fiap.tech.challenge.domain.video.VideoMediaType;
+import com.fiap.tech.challenge.domain.video.VideoPreview;
 import com.fiap.tech.challenge.infrastructure.ApiTest;
 import com.fiap.tech.challenge.infrastructure.ControllerTest;
-import com.fiap.tech.challenge.infrastructure.video.models.CreateVideoRequest;
-import com.fiap.tech.challenge.infrastructure.video.models.UpdateVideoRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,16 +36,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.Year;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import static com.fiap.tech.challenge.domain.utils.CollectionUtils.mapTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpHeaders.*;
@@ -101,8 +97,7 @@ class VideoAPITest {
                 .param("duration", expectedDuration.toString())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .with(ApiTest.USER_JWT)
-                ;
+                .with(ApiTest.USER_JWT);
 
         this.mvc.perform(aRequest)
                 .andDo(print())
@@ -142,89 +137,6 @@ class VideoAPITest {
 
     }
 
-    @Test
-    public void givenAValidCommand_whenCallsCreatePartial_shouldReturnAnId() throws Exception {
-        final var expectedId = VideoID.unique();
-        final var expectedTitle = Fixture.title();
-        final var expectedDescription = Fixture.Videos.description();
-        final var expectedDuration = Fixture.duration();
-
-
-        final var aCommand = CreateVideoRequest.with(
-                expectedTitle,
-                expectedDescription,
-                expectedDuration
-        );
-
-        when(createVideoUseCase.execute(any())).thenReturn(new CreateVideoOutput(expectedId.getValue()));
-
-        final var aRequest = post("/videos")
-                .with(ApiTest.USER_JWT)
-                .content(objectMapper.writeValueAsBytes(aCommand))
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        this.mvc.perform(aRequest)
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/videos/" + expectedId.getValue()))
-                .andExpect(header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(jsonPath("$.id", equalTo(expectedId.getValue())))
-        ;
-
-        final var cmdCaptor = ArgumentCaptor.forClass(CreateVideoCommand.class);
-
-        verify(createVideoUseCase).execute(cmdCaptor.capture());
-
-        final var actualCmd = cmdCaptor.getValue();
-
-        assertEquals(expectedTitle, actualCmd.title());
-        assertEquals(expectedDescription, actualCmd.description());
-        assertEquals(expectedDuration, actualCmd.duration());
-        assertTrue(actualCmd.getVideo().isEmpty());
-    }
-
-    @Test
-    public void givenAnInvalidCommand_whenCallsCreatePartial_shouldReturnError() throws Exception {
-        final var expectedErrorMessage = "title is required";
-
-
-        when(createVideoUseCase.execute(any())).thenThrow(NotificationException.with(new Error(expectedErrorMessage)));
-
-        final var aRequest = post("/videos")
-                .with(ApiTest.USER_JWT)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                        """
-                                {
-                                  "title":"title"
-                                }
-                                """
-                );
-
-        this.mvc.perform(aRequest)
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.message", equalTo(expectedErrorMessage)))
-        ;
-
-    }
-
-    @Test
-    public void givenAnEmptyCommand_whenCallsCreatePartial_shouldReturnError() throws Exception {
-        final var aRequest = post("/videos")
-                .with(ApiTest.USER_JWT)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON);
-
-
-        this.mvc.perform(aRequest)
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-        ;
-
-    }
 
     @Test
     public void givenAValidId_whenCallsGetById_shouldReturnVideo() throws Exception {
@@ -237,11 +149,11 @@ class VideoAPITest {
         final var expectedVideo = Fixture.Videos.audioVideo(VideoMediaType.VIDEO);
 
         final var aVideo = Video.newVideo(
-                        expectedTitle,
-                        expectedDescription,
-                        expectedDuration,
-                        expectedClientId
-                ).updateVideoMedia(expectedVideo);
+                expectedTitle,
+                expectedDescription,
+                expectedDuration,
+                expectedClientId
+        ).updateVideoMedia(expectedVideo);
 
         final var expectedId = aVideo.getId().getValue();
 

@@ -76,25 +76,27 @@ public class VideoEncoderResultTest {
 
     @Test
     void testUnmarshallErrorResult() throws IOException {
-        final var expectedMessage = "Resource not found";
+        final var expectedId = IDUtils.uuid();
+        final var expectedEncodedVideoFolder = "encodedVideoFolder";
         final var expectedStatus = "ERROR";
         final var expectedResourceId = IDUtils.uuid();
         final var expectedFilePath = "any.mp4";
-        final var expectedVideoMessage = new VideoMessage(expectedResourceId, expectedFilePath);
+        final var expectedVideoMessage = new VideoMetadata(expectedEncodedVideoFolder, expectedResourceId, expectedFilePath);
 
         final var json = """
                 {
+                    "id": "%s",
                     "status": "%s",
-                    "error": "%s",
-                    "message": {
+                    "video": {
+                        "encoded_video_folder": "%s",
                         "resource_id": "%s",
                         "file_path": "%s"
                     }
                 }
                 """.formatted(
-
+                expectedId,
                 expectedStatus,
-                expectedMessage,
+                expectedEncodedVideoFolder,
                 expectedResourceId,
                 expectedFilePath
         );
@@ -103,9 +105,9 @@ public class VideoEncoderResultTest {
 
         assertThat(actualResult)
                 .isInstanceOf(VideoEncoderError.class)
-                .hasFieldOrPropertyWithValue("error", expectedMessage)
+                .hasFieldOrPropertyWithValue("id", expectedId)
                 .hasFieldOrPropertyWithValue("status", expectedStatus)
-                .hasFieldOrPropertyWithValue("message", expectedVideoMessage);
+                .hasFieldOrPropertyWithValue("video", expectedVideoMessage);
     }
 
 }
