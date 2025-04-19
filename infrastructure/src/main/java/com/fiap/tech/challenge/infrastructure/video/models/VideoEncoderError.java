@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 
 @JsonTypeName("ERROR")
 public record VideoEncoderError(
-        @JsonProperty("message") VideoMessage message,
-        @JsonProperty("error") String error
+        @JsonProperty("id") String id,
+        @JsonProperty("video") VideoMetadata video
 ) implements VideoEncoderResult {
 
     private static final String ERROR = "ERROR";

@@ -1,0 +1,19 @@
+
+@startuml SystemContext
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(client, "Cliente", "Usuário autenticado que envia vídeos")
+System_Boundary(videoSystem, "Video Management System") {
+  System(videoModule, "Módulo de Vídeos", "Recebe, processa e armazena vídeos de clientes")
+}
+
+System_Ext(keycloak, "Keycloak", "Identity Provider para autenticação e autorização")
+System_Ext(s3, "Storage (S3)", "Armazena vídeos e imagens extraídas")
+System_Ext(rabbitmq, "RabbitMQ", "Broker de mensagens para comunicação assíncrona")
+
+Rel(client, videoModule, "Envia vídeos")
+Rel(videoModule, keycloak, "Autenticação OAuth2")
+Rel(videoModule, s3, "Armazena vídeos e imagens")
+Rel(videoModule, rabbitmq, "Publica eventos")
+
+@enduml

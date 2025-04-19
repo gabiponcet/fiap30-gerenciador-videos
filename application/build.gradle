@@ -12,4 +12,5 @@ repositories {
 
 dependencies {
     implementation(project(":domain"))
+    testImplementation(project(path: ':domain', configuration: 'testClasses'))
 }

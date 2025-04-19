@@ -1,15 +1,15 @@
-#amqp:
-#  admin:
-#    auto-create: false
-#  queues:
-#    production-status-changed:
-#      exchange: production.events
-#      routing-key: production.status-changed
-#      queue: production.status-changed.queue
-#    order-payed:
-#      exchange: order.events
-#      routing-key: order.payed
-#      queue: order.payed.queue
+amqp:
+  admin:
+    auto-create: false
+  queues:
+    video-created:
+      exchange: video.events
+      routing-key: video.created
+      queue: video.created.queue
+    video-encoded:
+      exchange: video.events
+      routing-key: video.encoded
+      queue: video.encoded.queue
 
 server:
   port: 8080
@@ -35,6 +35,19 @@ spring:
       maximum-pool-size: 20 # Mantemos até no máx 20 conexões com o banco de dados. O ideal é manter baixo mesmo, pois é algo custoso para o banco gerenciar. https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
       minimum-idle: 10
       pool-name: master
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8180/realms/video-app/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8180/realms/video-app
+  servlet:
+    multipart:
+      max-file-size: 10GB # Max file size.
+      max-request-size: 100GB # Max request size.
 
   jpa:
     open-in-view: false
@@ -47,9 +60,25 @@ spring:
       "[hibernate.connection.provider_disables_autocommit]": true
       # Para aumentar a performance ao máximo, desabilitamos o auto-commit e o open-in-view.
       # https://vladmihalcea.com/why-you-should-always-use-hibernate-connection-provider_disables_autocommit-for-resource-local-jpa-transactions/
-#  rabbitmq:
-#    host: ${amqp.host}
-#    port: ${amqp.port}
-#    username: ${amqp.username}
-#    password: ${amqp.password}
-#    dynamic: ${amqp.admin.auto-create}
+  rabbitmq:
+    host: ${amqp.host}
+    port: ${amqp.port}
+    username: ${amqp.username}
+    password: ${amqp.password}
+    dynamic: ${amqp.admin.auto-create}
+
+storage:
+  aws:
+    bucket: video
+    region: us-east-1
+    endpoint: http://localhost:4566
+    access-key: test
+    secret-key: test
+  videos:
+    filename-pattern: type-{type}
+    location-pattern: clientId-{clientId}/videoId-{videoId}
+
+logging:
+  level:
+    root: INFO
+    com.fiap.tech.challenge: DEBUG

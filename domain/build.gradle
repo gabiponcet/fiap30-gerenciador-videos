@@ -4,4 +4,22 @@ plugins {
 }
 
 group = 'com.fiap.tech.challenge.domain'
-version = 'unspecified'
+
+dependencies {
+    testImplementation 'com.github.javafaker:javafaker:1.0.2'
+}
+
+configurations {
+    testClasses {
+        extendsFrom(testImplementation)
+    }
+}
+
+task testJar(type: Jar) {
+    archiveClassifier.set('test')
+    from sourceSets.test.output
+}
+
+artifacts {
+    testClasses testJar
+}

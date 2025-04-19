@@ -10,10 +10,10 @@ server:
     threads:
       worker: 10
       io: 2
-#amqp:
-#  admin:
-#    auto-create: true
-#  host: localhost
-#  port: 5672
-#  username: adm_order
-#  password: 123456
+amqp:
+  admin:
+    auto-create: true
+  host: localhost
+  port: 5672
+  username: adm_video
+  password: 123456
