@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.sonarqube" version "6.0.1.5171"
+}
+
+group = 'com.fiap.tech.challenge.production'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':application')
+    implementation project(':infrastructure')
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "fiapg30-videos_fiapg30-gerenciador-videos"
+        property "sonar.organization", "fiapg30-videos"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.token", System.getenv("SONAR_TOKEN")
+        property "sonar.coverage.jacoco.xmlReportPaths", "$rootDir/build/reports/jacoco/test/jacocoTestReport.xml"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
