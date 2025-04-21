@@ -1,0 +1,13 @@
+plugins {
+    id "org.sonarqube" version "6.0.1.5171"
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "fiapg30-videos_fiapg30-gerenciador-videos"
+        property "sonar.organization", "fiapg30-videos"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.token", System.getenv("SONAR_TOKEN")
+        property "sonar.coverage.jacoco.xmlReportPaths", "$rootDir/build/reports/jacoco/test/jacocoTestReport.xml"
+    }
+}

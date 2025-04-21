@@ -93,6 +93,17 @@ jobs:
         run: ./gradlew check
         continue-on-error: true
 
+      - name: Run SonarQube Analysis
+        run: |
+          ./gradlew sonar \
+            -Dsonar.projectKey=fiapg30-videos_fiapg30-gerenciador-videos \
+            -Dsonar.organization=fiapg30-videos \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.host.url=https://sonarcloud.io
+        env:
+          SONAR_HOST_URL: https://sonarcloud.io
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       - name: Send Discord Notification - Test Success
         if: success()
         run: |
