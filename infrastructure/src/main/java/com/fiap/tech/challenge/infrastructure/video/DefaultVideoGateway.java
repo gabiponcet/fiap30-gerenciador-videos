@@ -3,10 +3,7 @@ package com.fiap.tech.challenge.infrastructure.video;
 import com.fiap.tech.challenge.domain.Identifier;
 import com.fiap.tech.challenge.domain.pagination.Pagination;
 import com.fiap.tech.challenge.domain.pagination.SearchQuery;
-import com.fiap.tech.challenge.domain.video.Video;
-import com.fiap.tech.challenge.domain.video.VideoGateway;
-import com.fiap.tech.challenge.domain.video.VideoID;
-import com.fiap.tech.challenge.domain.video.VideoPreview;
+import com.fiap.tech.challenge.domain.video.*;
 import com.fiap.tech.challenge.infrastructure.configuration.annotations.VideoCreatedQueue;
 import com.fiap.tech.challenge.infrastructure.services.EventService;
 import com.fiap.tech.challenge.infrastructure.utils.SqlUtils;
@@ -14,6 +11,7 @@ import com.fiap.tech.challenge.infrastructure.video.persistence.VideoJpaEntity;
 import com.fiap.tech.challenge.infrastructure.video.persistence.VideoRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +25,16 @@ public class DefaultVideoGateway implements VideoGateway {
 
     private final EventService eventService;
     private final VideoRepository repository;
+    private final AuthenticatedUser authenticatedUser;
 
 
     public DefaultVideoGateway(
             @VideoCreatedQueue final EventService eventService,
-            final VideoRepository repository
+            final VideoRepository repository, AuthenticatedUser authenticatedUser
     ) {
         this.eventService = Objects.requireNonNull(eventService);
         this.repository = Objects.requireNonNull(repository);
+        this.authenticatedUser = authenticatedUser;
     }
 
     @Override
@@ -68,7 +68,11 @@ public class DefaultVideoGateway implements VideoGateway {
     @Override
     @Transactional(readOnly = true)
     public Optional<Video> findById(final VideoID anId) {
-        return repository.findById(anId.getValue()).map(VideoJpaEntity::toAggregate);
+        final var video = repository.findById(anId.getValue()).map(VideoJpaEntity::toAggregate);
+        if(authenticatedUser.getClientId() != null && !authenticatedUser.getClientId().equals(video.get().getClientId())) {
+            throw new AccessDeniedException("You are not authorized to access this video");
+        }
+        return video;
     }
 
     @Override
@@ -81,6 +85,7 @@ public class DefaultVideoGateway implements VideoGateway {
 
         final var actualPage = this.repository.findAll(
                 SqlUtils.like(SqlUtils.upper(aQuery.terms())),
+                authenticatedUser.getClientId().getValue(),
                 page
         );
 
@@ -92,10 +97,4 @@ public class DefaultVideoGateway implements VideoGateway {
         );
     }
 
-    private Set<String> toString(final Set<? extends Identifier> ids) {
-        if(ids == null || ids.isEmpty()) {
-            return null;
-        }
-        return ids.stream().map(Identifier::getValue).collect(Collectors.toSet());
-    }
 }

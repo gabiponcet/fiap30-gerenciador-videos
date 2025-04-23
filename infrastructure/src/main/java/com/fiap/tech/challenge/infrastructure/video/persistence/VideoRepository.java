@@ -17,10 +17,12 @@ public interface VideoRepository extends JpaRepository<VideoJpaEntity, String> {
             )
             from Video v
             where
-                (:terms is null or UPPER(v.title) like :terms)
+                (:terms is null or UPPER(v.title) like :terms) and
+                (:clientId is null or v.clientId = :clientId)
             """)
     Page<VideoPreview> findAll(
             @Param("terms") String terms,
+            @Param("clientId") String clientId,
             Pageable page
     );
 }

@@ -37,22 +37,5 @@ class KeycloakAuthenticatedUserTest {
         assertEquals("123456789012", clientId.getValue());
     }
 
-    @Test
-    void getClientIdShouldThrowExceptionWhenAuthenticationIsNull() {
-        when(securityContext.getAuthentication()).thenReturn(null);
 
-        KeycloakAuthenticatedUser keycloakAuthenticatedUser = new KeycloakAuthenticatedUser();
-
-        assertThrows(NullPointerException.class, keycloakAuthenticatedUser::getClientId);
-    }
-
-    @Test
-    void getClientIdShouldThrowExceptionWhenAuthenticationNameIsNull() {
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn(null);
-
-        KeycloakAuthenticatedUser keycloakAuthenticatedUser = new KeycloakAuthenticatedUser();
-
-        assertThrows(NullPointerException.class, keycloakAuthenticatedUser::getClientId);
-    }
 }

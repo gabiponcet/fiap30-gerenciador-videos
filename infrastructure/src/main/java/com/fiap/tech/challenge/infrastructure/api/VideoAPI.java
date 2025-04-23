@@ -60,7 +60,7 @@ public interface VideoAPI {
     })
     void deleteById(@PathVariable(name = "id") String id);
 
-    @PreAuthorize("#id == authentication.principal.subject")
+//    @PreAuthorize("#id == authentication.principal.subject")
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
