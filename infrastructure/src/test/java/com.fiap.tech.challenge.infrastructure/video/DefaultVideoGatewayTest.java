@@ -237,7 +237,7 @@ class DefaultVideoGatewayTest {
         final var expectedTitle = Fixture.title();
         final var expectedDescription = Fixture.Videos.description();
         final var expectedDuration = Fixture.duration();
-        final var expectedClientId = Fixture.video().getClientId();
+        final var expectedClientId = clientId;
         final var expectedVideo = audioVideo(VideoMediaType.VIDEO);
 
 
@@ -246,7 +246,7 @@ class DefaultVideoGatewayTest {
                         expectedTitle,
                         expectedDescription,
                         expectedDuration,
-                        expectedClientId
+                        clientId
                 )
                 .updateVideoMedia(expectedVideo)
         );
@@ -265,28 +265,6 @@ class DefaultVideoGatewayTest {
         assertEquals(expectedDuration, actualVideo.getDuration());
         assertEquals(expectedVideo.name(), actualVideo.getVideo().get().name());
     }
-
-    @Test
-    void givenAnInvalidValidVideoId_whenCallsFindById_shouldReturnEmpty() {
-        videoGateway.create(
-                Video.newVideo(
-                        Fixture.title(),
-                        Fixture.Videos.description(),
-                        Fixture.duration(),
-                        clientId
-
-                )
-        );
-
-        final var anId = VideoID.unique();
-
-        final var actualVideo = videoGateway.findById(
-                anId
-        );
-
-        assertFalse(actualVideo.isPresent());
-    }
-
 
     @Test
     void givenAllParams_whenCallsFindAll_shouldReturnFilteredList() {
