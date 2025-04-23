@@ -7,10 +7,15 @@ import com.fiap.tech.challenge.domain.video.*;
 import com.fiap.tech.challenge.infrastructure.IntegrationTest;
 import com.fiap.tech.challenge.infrastructure.video.persistence.VideoRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Year;
@@ -30,9 +35,22 @@ class DefaultVideoGatewayTest {
     @Autowired
     private VideoRepository videoRepository;
 
+    private static final ClientID clientId = ClientID.from("clientId");
+
     @Test
     void testInjection() {
         assertNotNull(videoGateway);
+    }
+
+    @BeforeEach
+    public void setUp() {
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Authentication authentication = Mockito.mock(Authentication.class);
+
+        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
+        Mockito.when(authentication.getName()).thenReturn(clientId.getValue());
+
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
@@ -173,7 +191,7 @@ class DefaultVideoGatewayTest {
                         Fixture.title(),
                         Fixture.Videos.description(),
                         Fixture.duration(),
-                        Fixture.Videos.clientId()
+                        clientId
 
                 )
         );
@@ -197,7 +215,7 @@ class DefaultVideoGatewayTest {
                         Fixture.title(),
                         Fixture.Videos.description(),
                         Fixture.duration(),
-                        Fixture.Videos.clientId()
+                        clientId
 
                 )
         );
@@ -255,7 +273,7 @@ class DefaultVideoGatewayTest {
                         Fixture.title(),
                         Fixture.Videos.description(),
                         Fixture.duration(),
-                        Fixture.Videos.clientId()
+                        clientId
 
                 )
         );
@@ -499,7 +517,7 @@ class DefaultVideoGatewayTest {
                         "System Design",
                         Fixture.Videos.description(),
                         Fixture.duration(),
-                        Fixture.Videos.clientId()
+                        clientId
                 )
         );
 
@@ -508,7 +526,7 @@ class DefaultVideoGatewayTest {
                         "Não cometa esse erro",
                         Fixture.Videos.description(),
                         Fixture.duration(),
-                        Fixture.Videos.clientId()
+                        clientId
                 )
         );
 
@@ -517,7 +535,7 @@ class DefaultVideoGatewayTest {
                         "21.1 Implementação dos testes integrados do findAll",
                         Fixture.Videos.description(),
                         Fixture.duration(),
-                        Fixture.Videos.clientId()
+                        clientId
                 )
         );
 
@@ -526,7 +544,7 @@ class DefaultVideoGatewayTest {
                         "Aula de empreendedorismo",
                         Fixture.Videos.description(),
                         Fixture.duration(),
-                        Fixture.Videos.clientId()
+                        clientId
 
                 )
         );
