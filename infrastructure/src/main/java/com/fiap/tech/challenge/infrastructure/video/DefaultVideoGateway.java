@@ -69,7 +69,7 @@ public class DefaultVideoGateway implements VideoGateway {
     @Transactional(readOnly = true)
     public Optional<Video> findById(final VideoID anId) {
         final var video = repository.findById(anId.getValue()).map(VideoJpaEntity::toAggregate);
-        if(!authenticatedUser.getClientId().equals(video.get().getClientId())) {
+        if(authenticatedUser.getClientId() != null && !authenticatedUser.getClientId().equals(video.get().getClientId())) {
             throw new AccessDeniedException("You are not authorized to access this video");
         }
         return video;

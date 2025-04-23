@@ -47,7 +47,7 @@ public class VideoEncoderListener {
             this.updateMediaStatusUseCase.execute(aCmd);
 
         } else if (aResult instanceof VideoEncoderProcessing dto) {
-            log.error("[message:video.listener.income] [status:processing] [payload:{}]", message);
+            log.info("[message:video.listener.income] [status:processing] [payload:{}]", message);
             final var aCmd = UpdateMediaStatusCommand.with(
                     MediaStatus.PROCESSING,
                     dto.id(),

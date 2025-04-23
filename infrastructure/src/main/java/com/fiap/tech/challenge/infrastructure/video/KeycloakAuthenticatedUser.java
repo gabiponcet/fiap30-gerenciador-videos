@@ -12,9 +12,10 @@ public class KeycloakAuthenticatedUser implements AuthenticatedUser {
     @Override
     public ClientID getClientId() {
         var authentication = SecurityContextHolder
-                .getContext().getAuthentication().getName();
+                .getContext().getAuthentication() != null ? SecurityContextHolder
+                .getContext().getAuthentication().getName() : null;
 
 
-        return ClientID.from(authentication.replace("-", ""));
+        return authentication != null ? ClientID.from(authentication.replace("-", "")) : null;
     }
 }
