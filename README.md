@@ -111,3 +111,5 @@ O sistema é dividido em módulos que interagem por eventos e fila de mensagens:
 - [x] Diagrama de Integração de Sistemas (Keycloak, S3, RabbitMQ).
 
 *Todos os arquivos estão disponíveis na pasta [`docs/`](./docs).*
+
+*Postman disponivel [`doc/postman`](./doc/postman)*
